@@ -33,16 +33,13 @@ public class Program {
 			System.out.print("Data de checout: dd/MM/yyyy ");
 			checkOut = sdf.parse(sc.next());
 			
-			Date now = new Date();
-			if(checkIn.before(now) || checkOut.before(now)) {
-				System.out.println("ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT");
-			}
-			else if(!checkOut.after(checkIn)) {
-				System.out.println("ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT" );
+			
+			String error = reservation.updateDates(checkIn, checkOut);
+			if (error != null) {
+				System.out.println("Error reservation:" + error);
 			}
 			else {
-			reservation.updateDates(checkIn, checkOut);
-			System.out.println("reservation:" + reservation);
+				System.out.println("reservation:" + reservation);
 			}
 		}
 		

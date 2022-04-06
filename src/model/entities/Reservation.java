@@ -33,9 +33,18 @@ public class Reservation {
 		long diferenca = checkOut.getTime() - checkIn.getTime();//pega a data do checkout e a data do checkin, esse resultado será em milessegundos, por isso a variável dpo tipo LONG
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
-	public void updateDates(Date checkIn, Date checkOut) {
+	public String updateDates(Date checkIn, Date checkOut) {
+		Date now = new Date();
+		if(checkIn.before(now) || checkOut.before(now)) {
+			return "ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT";
+		}
+		if(!checkOut.after(checkIn)) {
+			return "ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT" ;
+		}
+		
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+		return null;
 	}
 	@Override
 	public String toString() {
