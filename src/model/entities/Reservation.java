@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import model.exception.DomainException;
+
 public class Reservation {
 	private Integer roomNumber;
 	private Date checkIn;
@@ -11,7 +13,10 @@ public class Reservation {
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 	
-	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
+	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) throws DomainException {
+		if(!checkOut.after(checkIn)) {
+			throw new DomainException( "ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT") ;
+		}
 		this.roomNumber = roomNumber;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -33,18 +38,18 @@ public class Reservation {
 		long diferenca = checkOut.getTime() - checkIn.getTime();//pega a data do checkout e a data do checkin, esse resultado será em milessegundos, por isso a variável dpo tipo LONG
 		return TimeUnit.DAYS.convert(diferenca, TimeUnit.MILLISECONDS);
 	}
-	public String updateDates(Date checkIn, Date checkOut) {
+	public void updateDates(Date checkIn, Date checkOut) throws DomainException {
 		Date now = new Date();
 		if(checkIn.before(now) || checkOut.before(now)) {
-			return "ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT";
+			throw new DomainException("reserva antes da data atual");
 		}
 		if(!checkOut.after(checkIn)) {
-			return "ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT" ;
+			throw new DomainException( "ERRO NAS DATAS, O CHEKIN NÃO PODE SER DEPOIS DO CHECKOUT") ;
 		}
 		
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		return null;
+
 	}
 	@Override
 	public String toString() {
